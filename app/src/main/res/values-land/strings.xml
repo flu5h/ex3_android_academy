@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Breaking News</string>
+    <string name="autor">Alexander Shipilov</string>
+    <string name="button">Button</string>
+    <string name="todo">TODO</string>
+    <string name="student_of_android_academy">Student of Android Academy</string>
+    <string name="sixth_year_student_of_moscow_power_engeneering_institute">Sixth-year student of Moscow Power Engeneering Institute</string>
+    <string name="student_of_mpei">Student of MPEI</string>
+    <string name="e_mail">E-mail</string>
+    <string name="info">info</string>
+    <bool name="island">true</bool>
+</resources>
