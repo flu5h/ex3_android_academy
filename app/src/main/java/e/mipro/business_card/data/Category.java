@@ -1,6 +1,4 @@
-package e.mipro.business_card;
-
-import java.util.Date;
+package e.mipro.business_card.data;
 
 public class Category {
   private final int id;

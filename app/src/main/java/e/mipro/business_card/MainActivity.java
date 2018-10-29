@@ -5,15 +5,15 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.WindowManager;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import e.mipro.business_card.data.DataUtils;
 
-public class NewsListActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
         public RecyclerView recyclerView;
         public CustomAdapter mAdapter ;
         @Override
@@ -31,17 +31,7 @@ public class NewsListActivity extends AppCompatActivity {
             else
                 recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        }
-        public void openNews(View view){
-            int itemPosition = recyclerView.getChildLayoutPosition(view);
-            NewsItem item = mAdapter.getItem(itemPosition);
-            Intent i = new Intent(getBaseContext(), ShowSingleNewsActivity.class);
-            //Toast.makeText(getBaseContext(), item.getTitle().toString(), Toast.LENGTH_SHORT).show();
 
-            i.putExtra("news_title", item.getTitle().toString());
-            i.putExtra("news_text", item.getFullText().toString());
-            i.putExtra("news_date", item.getPublishDate().toString());
-            startActivity(i);
         }
 
     @Override
@@ -58,7 +48,6 @@ public class NewsListActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.info:
                 Intent i = new Intent(getBaseContext(), AboutActivity.class);
-                //Toast.makeText(getBaseContext(), item.getTitle().toString(), Toast.LENGTH_SHORT).show();
                 startActivity(i);
                 return true;
             default:
