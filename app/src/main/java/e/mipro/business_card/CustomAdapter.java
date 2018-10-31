@@ -85,6 +85,7 @@ class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder> {
                 i.putExtra("news_text", item.getFullText().toString());
                 i.putExtra("news_date", item.getPublishDate().toString());
                 context.startActivity(i);
+
             });
 
         }
