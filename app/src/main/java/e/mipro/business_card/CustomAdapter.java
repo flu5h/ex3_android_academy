@@ -2,6 +2,7 @@ package e.mipro.business_card;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
 
 import java.util.List;
+import java.util.logging.Handler;
 
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,11 +26,12 @@ class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder> {
     private LayoutInflater inflater;
     private final Context context;
     private final RequestManager imageLoader;
+    public Handler h;
 
-    public CustomAdapter(Context context, List<NewsItem> data){
-        this.data=data;
-        this.context=context;
-        inflater=LayoutInflater.from(context);
+    public CustomAdapter(Context context, List<NewsItem> data) {
+        this.data = data;
+        this.context = context;
+        inflater = LayoutInflater.from(context);
         final RequestOptions imageOption = new RequestOptions()
                 .centerCrop();
         this.imageLoader = Glide.with(context).applyDefaultRequestOptions(imageOption);
@@ -41,18 +44,25 @@ class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder> {
 
 
     @Override
-    public ViewHolder onCreateViewHolder( ViewGroup parent, int i) {
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int i) {
         return new ViewHolder(
-                inflater.inflate(R.layout.news_line,parent,false)
+                inflater.inflate(R.layout.news_line, parent, false)
         );
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int i) {
-        NewsItem news=data.get(i);
-        holder.titleView.setText(news.getTitle());
-        holder.textView.setText(news.getFullText().substring(0,110).replaceAll("\n\n","\n")+"...");
-        holder.dateView.setText(news.getPublishDate().toString());
+        NewsItem news = data.get(i);
+        new Thread(new Runnable() {
+            public void run() {
+
+                holder.titleView.setText(news.getTitle());
+                holder.textView.setText(news.getFullText().substring(0, 110).replaceAll("\n\n", "\n") + "...");
+                holder.dateView.setText(news.getPublishDate().toString());
+
+                Log.d("MYLOGS", Thread.currentThread().getName() + "  load");
+            }
+        }).start();
         imageLoader.load(news.getImageUrl()).into(holder.imageView);
     }
 
@@ -61,7 +71,7 @@ class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder> {
         return data.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder{
+    class ViewHolder extends RecyclerView.ViewHolder {
         public final ImageView imageView;
         public final TextView titleView;
         public final TextView textView;
@@ -69,13 +79,14 @@ class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder> {
         public final CardView cardView;
 
 
-        public  ViewHolder(View itemView) {
+        public ViewHolder(View itemView) {
             super(itemView);
-            imageView=itemView.findViewById(R.id.imageView);;
-            titleView=itemView.findViewById(R.id.news_title);
-            textView=itemView.findViewById(R.id.news_text);
-            dateView=itemView.findViewById(R.id.news_date);
-            cardView=itemView.findViewById(R.id.card);
+            imageView = itemView.findViewById(R.id.imageView);
+
+            titleView = itemView.findViewById(R.id.news_title);
+            textView = itemView.findViewById(R.id.news_text);
+            dateView = itemView.findViewById(R.id.news_date);
+            cardView = itemView.findViewById(R.id.card);
 
             cardView.setOnClickListener(v -> {
                 int itemPosition = getAdapterPosition();
