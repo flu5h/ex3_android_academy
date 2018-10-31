@@ -40,7 +40,6 @@
             android:layout_margin="8dp"
             android:layout_toEndOf="@+id/editText"
             android:layout_weight="1"
-            android:onClick="sendEmail"
             android:text="@string/e_mail"
             android:textSize="16dp" />
 
@@ -70,11 +69,11 @@
 
             <ImageView
                 android:id="@+id/aa_ic"
-                android:layout_width="match_parent"
+                android:layout_width="150dp"
                 android:layout_height="28dp"
-                android:layout_marginBottom="8dp"
                 android:layout_marginLeft="50dp"
                 android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
                 android:layout_weight="1"
                 app:srcCompat="@android:drawable/sym_def_app_icon" />
 
@@ -98,11 +97,11 @@
 
             <ImageView
                 android:id="@+id/mpei_ic"
-                android:layout_width="match_parent"
+                android:layout_width="150dp"
                 android:layout_height="28dp"
-                android:layout_marginBottom="8dp"
                 android:layout_marginLeft="50dp"
                 android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
                 android:layout_weight="1"
                 app:srcCompat="@drawable/mpei" />
 
@@ -138,7 +137,7 @@
             android:layout_centerHorizontal="true"
             android:layout_margin="8dp"
             android:layout_marginBottom="11dp"
-            android:onClick="callmyphone"
+
             app:srcCompat="@android:drawable/sym_action_call" />
 
         <ImageView
@@ -149,7 +148,7 @@
             android:layout_centerHorizontal="true"
             android:layout_margin="8dp"
             android:layout_marginBottom="11dp"
-            android:onClick="vklink"
+
             app:srcCompat="@drawable/vk" />
 
         <ImageView
@@ -160,7 +159,7 @@
             android:layout_centerHorizontal="true"
             android:layout_margin="8dp"
             android:layout_marginBottom="11dp"
-            android:onClick="tglink"
+
             app:srcCompat="@drawable/tg" />
     </LinearLayout>
 
@@ -169,8 +168,8 @@
         android:layout_width="match_parent"
         android:layout_height="118dp"
         android:layout_above="@+id/email"
-        android:layout_alignParentStart="true"
         android:layout_below="@+id/ico"
+        android:layout_alignParentStart="true"
         android:layout_margin="8dp">
 
         <LinearLayout

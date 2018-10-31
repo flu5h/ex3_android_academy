@@ -1,4 +1,4 @@
-package e.mipro.business_card;
+package e.mipro.business_card.data;
 
 import java.util.Date;
 
