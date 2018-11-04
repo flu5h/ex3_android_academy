@@ -1,17 +1,15 @@
 package e.mipro.business_card.data;
 
-import java.util.Date;
-
 public class NewsItem {
 
   private final String title;
   private final String imageUrl;
-  private final Category category;
-  private final Date publishDate;
+  private final String category;
+  private final String publishDate;
   private final String previewText;
   private final String fullText;
 
-  public NewsItem(String title, String imageUrl, Category category, Date publishDate, String previewText, String fullText) {
+  public NewsItem(String title, String imageUrl, String category, String publishDate, String previewText, String fullText) {
     this.title = title;
     this.imageUrl = imageUrl;
     this.category = category;
@@ -28,11 +26,11 @@ public class NewsItem {
     return imageUrl;
   }
 
-  public Category getCategory() {
+  public String getCategory() {
     return category;
   }
 
-  public Date getPublishDate() {
+  public String getPublishDate() {
     return publishDate;
   }
 

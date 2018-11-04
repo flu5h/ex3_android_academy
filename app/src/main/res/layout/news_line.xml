@@ -11,6 +11,7 @@
     android:background="@color/colorAccent"
     app:cardBackgroundColor="@color/white">
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -74,6 +75,14 @@
             tools:layout_editor_absoluteX="5dp" />
 
     </LinearLayout>
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:background="@android:color/white" />
 
 
 </androidx.cardview.widget.CardView>
