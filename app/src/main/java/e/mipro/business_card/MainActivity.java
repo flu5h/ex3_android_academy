@@ -2,43 +2,37 @@ package e.mipro.business_card;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.WindowManager;
 
-import com.google.gson.Gson;
-
 import java.io.IOException;
 import java.util.List;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import e.mipro.business_card.DTO.NewsDTO;
 import e.mipro.business_card.DTO.NewsResponse;
+import e.mipro.business_card.NET.Network;
 import e.mipro.business_card.data.DataUtils;
 import e.mipro.business_card.data.NewsItem;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 
 public class MainActivity extends AppCompatActivity {
     public RecyclerView recyclerView;
     public CustomAdapter mAdapter ;
      public List<NewsItem> newsList=DataUtils.generateNews();
-     boolean f;
-    @Nullable
-    private  Call searchRequest;
-    public List<NewsDTO> news;
 
+    public List<NewsDTO> news;
+    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     private static final String TAG = "MYLOGS";
     private static final String API_KEY = "6a561a096d2044e18e5a6fa108606185";
@@ -47,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.news_list);
-        loadNews("");
+        loadNews("science");
         setupUI();
     }
 
@@ -90,44 +84,37 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadNews(@NonNull String search) {
 
-        OkHttpClient client = new OkHttpClient();
+        final Disposable searchDisposable = Network.getInstance()
+                .news()
+                .search(search)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::checkResponseAndShowState, this::handleError);
+        compositeDisposable.add(searchDisposable);
 
-        Request request = new Request.Builder()
-                .get()
-                .url("http://api.nytimes.com/svc/topstories/v2/" + "science" + ".json?api-key=" + API_KEY)
-                .build();
+    }
 
-        Call call = client.newCall(request);
-        Log.d(TAG, "try request");
+    private void handleError(Throwable throwable) {
+        if (throwable instanceof IOException) {
 
-        call.enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                Log.d(TAG, "request fail");
-            }
+            return;
+        }
 
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                Log.d(TAG, "request complete");
-                Gson gson = new Gson();
-                String gsonResponse = response.body().string();
-                //Log.d(TAG, gsonResponse);
-                NewsResponse newsResponse = gson.fromJson(gsonResponse, NewsResponse.class);
-                news = newsResponse.getData();
-                Log.d(TAG, Thread.currentThread().getName());
-                Log.d(TAG, news.get(1).getTitle());
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mAdapter= new CustomAdapter(getApplicationContext(),news );
-                        recyclerView.setAdapter(mAdapter);
-                    }
-                });
-
-            }
-        });
     }
 
 
+    private void checkResponseAndShowState(@NonNull NewsResponse response) {
+        //Here I use Guard Clauses. You can find more here:
+        //https://refactoring.com/catalog/replaceNestedConditionalWithGuardClauses.html
+
+        //Here we have 4 clauses:
+
+
+        final List<NewsDTO> data = response.getData();
+
+        mAdapter= new CustomAdapter(getApplicationContext(),data );
+        recyclerView.setAdapter(mAdapter);
+
+    }
 
 }
