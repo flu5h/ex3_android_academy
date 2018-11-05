@@ -2,10 +2,15 @@ package e.mipro.business_card;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import java.io.IOException;
 import java.util.List;
@@ -18,22 +23,20 @@ import androidx.recyclerview.widget.RecyclerView;
 import e.mipro.business_card.DTO.NewsDTO;
 import e.mipro.business_card.DTO.NewsResponse;
 import e.mipro.business_card.NET.Network;
-import e.mipro.business_card.data.DataUtils;
-import e.mipro.business_card.data.NewsItem;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
+;
+
 
 public class MainActivity extends AppCompatActivity {
     public RecyclerView recyclerView;
-    public CustomAdapter mAdapter ;
-     public List<NewsItem> newsList=DataUtils.generateNews();
-
-    public List<NewsDTO> news;
+    public CustomAdapter mAdapter;
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
-
+    private String[] categories ={"home", "world", "opinion", "national", "politics", "upshot", "nyregion", "business", "technology", "science", "health", "sports", "arts", "books", "movies",
+            "theater", "sundayreview", "fashion", "tmagazine", "food", "travel", "magazine", "realestate", "automobiles", "obituaries", "insider"};
     private static final String TAG = "MYLOGS";
     private static final String API_KEY = "6a561a096d2044e18e5a6fa108606185";
 
@@ -41,20 +44,18 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.news_list);
-        loadNews("science");
-        setupUI();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        setupUI();
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu1, menu);
-        MenuItem item = menu.findItem(R.id.info);
-
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -70,16 +71,35 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    void setupUI(){
+    void setupUI() {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        recyclerView = (RecyclerView)findViewById(R.id.recycler_view);
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
         if (getApplicationContext().getResources().getBoolean(R.bool.island))
             recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         else
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        ArrayAdapter<String>  adapter= new ArrayAdapter<String>(this ,
+                android.R.layout.simple_spinner_item ,
+                categories);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        Spinner spinner = (Spinner)findViewById(R.id.spinner);
+        spinner.setAdapter(adapter);
+        spinner.setSelection(1);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                loadNews((String)spinner.getSelectedItem());
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+            }
+        });
+
     }
 
     private void loadNews(@NonNull String search) {
@@ -91,12 +111,11 @@ public class MainActivity extends AppCompatActivity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::checkResponseAndShowState, this::handleError);
         compositeDisposable.add(searchDisposable);
-
     }
 
     private void handleError(Throwable throwable) {
         if (throwable instanceof IOException) {
-
+            Log.d(TAG,"Loading err");
             return;
         }
 
@@ -104,15 +123,9 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void checkResponseAndShowState(@NonNull NewsResponse response) {
-        //Here I use Guard Clauses. You can find more here:
-        //https://refactoring.com/catalog/replaceNestedConditionalWithGuardClauses.html
-
-        //Here we have 4 clauses:
-
-
         final List<NewsDTO> data = response.getData();
 
-        mAdapter= new CustomAdapter(getApplicationContext(),data );
+        mAdapter = new CustomAdapter(getApplicationContext(), data);
         recyclerView.setAdapter(mAdapter);
 
     }

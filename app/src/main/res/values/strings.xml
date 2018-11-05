@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Breaking News</string>
+    <string name="app_name">NYT</string>
     <string name="autor">Alexander Shipilov</string>
     <string name="button">Button</string>
     <string name="todo">TODO</string>
