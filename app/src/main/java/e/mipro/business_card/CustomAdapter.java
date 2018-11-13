@@ -1,7 +1,6 @@
 package e.mipro.business_card;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -21,6 +20,7 @@ import com.bumptech.glide.request.target.Target;
 
 import java.util.List;
 
+import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 import e.mipro.business_card.DTO.NewsDTO;
@@ -31,27 +31,32 @@ class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder> {
     private LayoutInflater inflater;
     private final Context context;
     private final RequestManager imageLoader;
+    private final OnItemClickListener clickListener;
 
-    public CustomAdapter(Context context, List<NewsDTO> data){
+
+    public CustomAdapter(Context context, List<NewsDTO> data, OnItemClickListener clickListener) {
         this.data=data;
         this.context=context;
         inflater=LayoutInflater.from(context);
         final RequestOptions imageOption = new RequestOptions()
                 .centerCrop();
         this.imageLoader = Glide.with(context).applyDefaultRequestOptions(imageOption);
-
+        this.clickListener = clickListener;
     }
 
     public NewsDTO getItem(int i) {
         return data.get(i);
     }
 
-
     @Override
     public ViewHolder onCreateViewHolder( ViewGroup parent, int i) {
         return new ViewHolder(
-                inflater.inflate(R.layout.news_line,parent,false)
+                inflater.inflate(R.layout.news_line, parent, false), clickListener
         );
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(NewsDTO newsItem);
     }
 
     @Override
@@ -101,7 +106,7 @@ class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder> {
         public final CardView cardView;
         public final ProgressBar progressBar;
 
-        public  ViewHolder(View itemView) {
+        public ViewHolder(View itemView, @Nullable OnItemClickListener listener) {
             super(itemView);
             imageView=itemView.findViewById(R.id.imageView);
             titleView=itemView.findViewById(R.id.news_title);
@@ -109,15 +114,19 @@ class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder> {
             dateView=itemView.findViewById(R.id.news_date);
             cardView=itemView.findViewById(R.id.card);
             progressBar=itemView.findViewById(R.id.progressBar);
-
             cardView.setOnClickListener(v -> {
                 int itemPosition = getAdapterPosition();
+                if (listener != null && itemPosition != RecyclerView.NO_POSITION) {
+                    listener.onItemClick(data.get(itemPosition));
+                }
+/*
                 NewsDTO item = data.get(itemPosition);
                 Intent i = new Intent(context, ShowSingleNewsActivity.class);
-                i.putExtra("news_title", item.getTitle().toString());
-                i.putExtra("news_text", item.getAbstract1().toString());
-                i.putExtra("news_date", item.getPublishedDate().toString());
-                context.startActivity(i);
+//                i.putExtra("news_title", item.getTitle().toString());
+//                i.putExtra("news_text", item.getAbstract1().toString());
+//                i.putExtra("news_date", item.getPublishedDate().toString());
+                i.putExtra("news_url", item.getUrl().toString());
+                context.startActivity(i);*/
 
             });
 

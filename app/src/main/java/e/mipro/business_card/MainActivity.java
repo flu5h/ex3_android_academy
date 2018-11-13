@@ -11,6 +11,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.List;
@@ -38,18 +39,32 @@ public class MainActivity extends AppCompatActivity {
     private String[] categories ={"home", "world", "opinion", "national", "politics", "upshot", "nyregion", "business", "technology", "science", "health", "sports", "arts", "books", "movies",
             "theater", "sundayreview", "fashion", "tmagazine", "food", "travel", "magazine", "realestate", "automobiles", "obituaries", "insider"};
     private static final String TAG = "MYLOGS";
-    private static final String API_KEY = "6a561a096d2044e18e5a6fa108606185";
+    private final CustomAdapter.OnItemClickListener clickListener = news ->
+    {
+        Intent i = new Intent(this, ShowSingleNewsActivity.class);
+        i.putExtra("url", news.getUrl());
+        startActivity(i);
+    };
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.news_list);
+        setupUI();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        setupUI();
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        compositeDisposable.dispose();
     }
 
     @Override
@@ -109,23 +124,22 @@ public class MainActivity extends AppCompatActivity {
                 .search(search)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::checkResponseAndShowState, this::handleError);
+                .subscribe(this::shownews, this::handleError);
         compositeDisposable.add(searchDisposable);
     }
 
     private void handleError(Throwable throwable) {
         if (throwable instanceof IOException) {
             Log.d(TAG,"Loading err");
+            Toast.makeText(this, "ERROR: Check your internet connection", Toast.LENGTH_LONG);
             return;
         }
-
     }
 
 
-    private void checkResponseAndShowState(@NonNull NewsResponse response) {
+    private void shownews(@NonNull NewsResponse response) {
         final List<NewsDTO> data = response.getData();
-
-        mAdapter = new CustomAdapter(getApplicationContext(), data);
+        mAdapter = new CustomAdapter(getApplicationContext(), data, clickListener);
         recyclerView.setAdapter(mAdapter);
 
     }
