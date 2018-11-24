@@ -1,17 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_alignParentTop="false">
 
-    <androidx.recyclerview.widget.RecyclerView
+    <androidx.appcompat.widget.AppCompatSpinner
+        android:id="@+id/spinner"
+        layout_height="36dp"
+        layout_width="match_parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:layout_height="36dp" />
 
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorPrimary"
-         />
+        android:layout_below="@+id/spinner"
+        android:background="@color/colorPrimary" />
 
 
 </RelativeLayout>

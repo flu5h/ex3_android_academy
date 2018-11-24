@@ -12,14 +12,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light">
-        <activity android:name=".NewsListActivity">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".AboutActivity"
-            android:label="@string/autor">
+            android:label="@string/autor"
+            android:windowSoftInputMode="adjustPan">
         </activity>
         <activity android:name=".ShowSingleNewsActivity">
         </activity>

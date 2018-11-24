@@ -42,7 +42,6 @@
             android:layout_margin="8dp"
             android:layout_toEndOf="@+id/editText"
             android:layout_weight="1"
-            android:onClick="sendEmail"
             android:text="@string/e_mail"
             android:textSize="16dp" />
 
@@ -141,7 +140,7 @@
             android:layout_centerHorizontal="true"
             android:layout_margin="8dp"
             android:layout_marginBottom="11dp"
-            android:onClick="callmyphone"
+
             app:srcCompat="@android:drawable/sym_action_call" />
 
         <ImageView
@@ -152,7 +151,7 @@
             android:layout_centerHorizontal="true"
             android:layout_margin="8dp"
             android:layout_marginBottom="11dp"
-            android:onClick="vklink"
+
             app:srcCompat="@drawable/vk" />
 
         <ImageView
@@ -163,7 +162,7 @@
             android:layout_centerHorizontal="true"
             android:layout_margin="8dp"
             android:layout_marginBottom="11dp"
-            android:onClick="tglink"
+
             app:srcCompat="@drawable/tg" />
     </LinearLayout>
 
